@@ -3,7 +3,7 @@
 /* Slideshow container */
 .slideshow-container {
   max-width: 1000px;
-  position: relative;
+  position: center;
   margin: auto;
 }
 
@@ -92,3 +92,4 @@
   from {opacity: .4} 
   to {opacity: 1}
 }
+
