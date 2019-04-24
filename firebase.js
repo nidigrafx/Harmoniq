@@ -21,6 +21,10 @@ var database = firebase.database();
 var searchBySong = [];
 var searchByArtist = [];
 var dbRecordCount = 0;
+var resultNum;
+var albumName; 
+var social;
+var dateAdded;
 
 // used for firebase updates and deletes
 var keyId;
@@ -50,39 +54,78 @@ $(".btn btn-default").on("click", function(event) {
 // clearing text box
    $("#search-bar").val("");
 
-// when the user adds an additional song and artist
-   database.ref().on("child_added", function(childSnapshot) {
-     console.log(childSnapshot.val());
+  //  Push search results to Firebase database
+    for(var i = 0; i < result.length; i++) {
+        firebaseDB.ref().push({
+            artistName: result[i].artistName,
+            twitterUrl: result[i].songName,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
+        });
+    }
 
-   searchBySong = childSnapShot.val().song;
-   searchByArtist = childSnapshot.val().artist;
+
+firebaseDB.ref().on("child_added", function(childSnapshot) {
+
+  resultNum = childSnapshot.val().resultNum;
+  songName = childSnapshot.val().songName;
+  artistName = childSnapshot.val().artistName;
+  albumName = childSnapshot.val().albumName;
+  social = childSnapshot.val().social;
+  var keyId = childSnapshot.key;
+  
+  console.log("keyId", keyId);
+     
+  // Error Handler
+  }, function(errorObject) {
+    console.log("firebase return error: " + errorObject.code);
+});
 
    });
 
-// updating specific fields without overwriting previous childs
+   function songDatabaseUpdate(objects) {
+      
+    objects.forEach(object => {
+        firebaseDB.ref().push({
+          resultNum: object.resultNum,   
+          songName: object.songName,
+          artistName: object.artistName,
+          albumName: object.albumName,
+          social: object.social,
+          dateAdded: firebase.database.ServerValue.TIMESTAMP
+        });
+    })
+  }
 
-   var keyId = childSnapshot.key;
-   console.log ("keyId", keyId);
 
-});
-
-  searchBySong.push({ record: dbRecordCount,
-      song: searchBySong,
-      artist: searchByArtist,
-  });
-
-dbRecordCount++;
-
-// saving updates to realtime database
-
-editFirebase = function () {
-  searchBySong = searchedSong;
-  searchByArtist = searchedArtist;
-
+deleteRow = function (num) {
+  var rowDeleted = num;
   
+  console.log("rowDeleted:", rowDeleted);
+  document.getElementById("tableId").deleteRow(num);
+
+
+  for(var i = 0; i < dbRecordCount; i++) {
+
+    if(music[i].record === rowDeleted) {
+      keyId = music[i].keyId;
+
+      console.log("rowDeleted", rowDeleted);
+      console.log("music[i].record", music[i].record);
+      console.log("keyId", keyId);
+    }
+  }
+
+  // Push user input to firebase database
+  firebaseDB.ref(keyId).remove();
+
 }
 
+firebaseDB.ref(keyId).update({
+
 });
+
+
+
 
 
 
