@@ -68,7 +68,6 @@ $(document).on("click",".fas", async function() {
 // =========================================================================================================================
 
 function searchBySong(song) {
-    var result = [];
     $.ajax({
         data: {
             apikey: musicApiKey,
@@ -84,6 +83,7 @@ function searchBySong(song) {
         contentType: 'application/json',
 
     }).then(function(response) {
+        let result = [];
         let listArray = response.message.body.track_list;
         listArray.forEach(element => {
             let track = {
@@ -94,7 +94,8 @@ function searchBySong(song) {
             result.push(track);
         });
         console.log(result);
-        return result;
+        createTable(result);
+      //  songDatabaseUpdate(result);
     });
 }
 
@@ -214,11 +215,7 @@ $("#artistBtn").on("click", function(event) {
     var artist = $("#searchTerm").val().trim();
     console.log("artist:", artist);
 
-
-    
     searchByArtist(artist);
- 
-
   
   });
 
@@ -306,27 +303,34 @@ function createTable(result) {
 $("#songBtn").on("click", function(event) {
     event.preventDefault();
   
-    console.log("this:", this);
   
     // Trim spaces from user input
     var song = $("#searchTerm").val().trim();
-    
+    console.log(song);
     searchBySong(song);
 
     // Push user input to firebase database
-    firebaseDB.ref().push({
-        resultNum: resultNum,
-        songName: songName,
-        artistName: artistName,
-        albumName: albumName,
-        social: social,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
-    });
+    
   
     // Clear input field
-    document.getElementById("searchTerm").reset();
+    $("#searchTerm").val("");
   
   });
+
+
+  function songDatabaseUpdate(objects) {
+      
+    objects.forEach(object => {
+        firebaseDB.ref().push({
+            resultNum: object.resultNum,   
+            songName: object.songName,
+            artistName: object.artistName,
+            albumName: object.albumName,
+            social: object.social,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
+        });
+    })
+  }
 
   /* 
 
