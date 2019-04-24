@@ -59,6 +59,11 @@ $(document).on("click",".fas", async function() {
 
 });
 
+//purchase button new window
+$("#purchase").on("click", function() {
+    window.open($(this).attr("href"),"_blank");
+});
+
 
 // =========================================================================================================================
 // API: MUSIXMATCH - SEARCH BY SONG
@@ -161,6 +166,7 @@ function ticketSearch(searchTerm, zipCode) {
         dataType: "json",
         success: function(response) {
             try {
+                console.log(response);
                 var result = [];
                 let jsonArray = response._embedded.events;
 
@@ -174,7 +180,8 @@ function ticketSearch(searchTerm, zipCode) {
                         address: element._embedded.venues[0].address.line1,
                         city: element._embedded.venues[0].city.name,
                         country: element._embedded.venues[0].country.name,
-                        countryCode: element._embedded.venues[0].country.countryCode
+                        countryCode: element._embedded.venues[0].country.countryCode,
+                        eventUrl: element._embedded.venues[0].url
                     }
                     result.push(event);
                     populateModal(result);
@@ -244,6 +251,7 @@ function populateModal(resultList) {
         $("#date").text(event.date);
         $("#genre").text(event.genre);
         $("#status").text(event.status);
+        $("#purchase").attr("href", event.eventUrl);
     });
 }
 
