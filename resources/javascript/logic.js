@@ -239,7 +239,6 @@ function createTable(result) {
             "<th scope='col' id = 'thAction' colspan='4'>Events</th>" +
         "</tr>" +
     "</thead>");
-    
 
     result.forEach(function(element, index) {
         index++;
@@ -266,30 +265,6 @@ function createTable(result) {
         $("#tableId").append(row)
         console.log(index)
         index++;
-
-        // $(".tBodyClass").append("<tr class='r"+i+"'>" +
-        //     "<td id='r"+i+"c"+0+"'>"+i+"</td>" +
-        //     "<td id='r"+i+"c"+1+"'>"+result[i].songName+"</td>" +
-        //     "<td id='r"+i+"c"+2+"'>"+result[i].artistName+"</td>" +
-        //     "<td id='r"+i+"c"+3+"'>"+result[i].albumName+"</td>" +
-        //     "<td id='r"+i+"c"+4+"'>"+result[i].twitterUrl+"</td>" +
-  
-        //     "<td id='r"+i+"c"+5+"'>"+
-        //         "<input type='button' class='tblBtn' id='tBtn_r"+i+"c"+5+"' onclick='ticketMasterRow("+i+")' value='Ticketmaster'>" +
-        //     "</td>" +
-
-        //     "<td id='r"+i+"c"+6+"'>"+
-        //         "<input type='text' class='tblZip' id='zip_r"+i+"c"+6+"')' style='display: none;' required placeholder='Enter Zip Code'>" +
-        //     "</td>" +
-        
-        //     "<td id='r"+i+"c"+7+"'>"+
-        //         "<input type='button' class='tblBtn' id='sBtn_r"+i+"c"+7+"' onclick='submitRow("+i+")' style='display: none;' value='Submit'>" +
-        //     "</td>" + 
-
-        //     "<td id='r"+i+"c"+8+"'>"+
-        //         "<input type='button' class='tblBtn' id='dBtn_r"+i+"c"+8+"' onclick='deleteRow("+i+")' value='Remove'>" +
-        //     "</td>" +
-        // "</tr>");
     });
    
 };
