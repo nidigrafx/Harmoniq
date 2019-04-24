@@ -23,13 +23,41 @@ var firebaseDB = firebase.database();
 const musicApiKey = "cd406979493ca39852ad6ce1bcb6dbd5";
 const ticketMasterApiKey = "5ELeAvJcyCqqiNidXz1z1MViy9Rc22cH";
 
-// API Result Array
 
+// =========================================================================================================================
+// ZipCode
+// =========================================================================================================================
 
-// Firebase record count
-var dbCount = 0;
+$(document).on("click",".fas", async function() {
+  
+    const {value: text} = await Swal.fire({title: 'Sweet!',
+        text: 'Modal with a custom image.',
+        imageUrl: 'https://unsplash.it/400/200',
+        imageWidth: 400,
+        imageHeight: 200,
+        imageAlt: 'Custom image',
+        animation: false,
+        input: 'text',
+        inputPlaceholder: 'Type your message here...',
+        showCancelButton: true
+      })
+      
+      if (text) {
+        if(!isNaN(text) && text< 100000) {
+            var zipCode = text;
+            ticketSearch($(this).attr("artist"), zipCode);
+        }
+        else {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: '<a href>Why do I have this issue?</a>'
+              })
+        }
+      }
 
-
+});
 
 
 // =========================================================================================================================
@@ -143,15 +171,12 @@ function ticketSearch(searchTerm, zipCode) {
                     venueName: element._embedded.venues[0].name,
                     address: element._embedded.venues[0].address.line1,
                     city: element._embedded.venues[0].city.name,
-                    state: element._embedded.venues[0].state.name,
-                    stateCode: element._embedded.venues[0].state.stateCode,
                     country: element._embedded.venues[0].country.name,
                     countryCode: element._embedded.venues[0].country.countryCode
                 }
                 result.push(event);
             });
             console.log(result);
-            return result;
             }
       });
 }
@@ -205,9 +230,9 @@ $("#artistBtn").on("click", function(event) {
 function createTable(result) {
     console.log("----start of create table------");
     console.log(result);
-    var tableBody = $("#tableId");
+    var tableHeader = $("#tableId");
 
-    $(tableBody).html("<thead class='thead-light'>" +
+    $(tableHeader).html("<thead class='thead-light'>" +
         "<tr>" +
             "<th scope='col'>Result</th>" +
             "<th scope='col'>Song Title</th>" +
@@ -217,24 +242,33 @@ function createTable(result) {
             "<th scope='col' id = 'thAction' colspan='4'>Events</th>" +
         "</tr>" +
     "</thead>");
+    
 
-    for (var i = 0; i < result.length; i++) {
-        debugger
-        console.log(result[i]);
-        var id = $("<td>").text(i);
-        var song = $("<td>").text(result[i].songName);
-        var artist = $("<td>").text(result[i].artistName);
-        var album = $("<td>").text(result[i].albumName);
-        var twitterUrl = $("<td>").text(result[i].twitterUrl);
+    result.forEach(function(element, index) {
+        index++;
+        console.log(element);
 
-        $("#tBodyId").append(id);  
-        $("#tBodyId").append(song); 
-        $("#tBodyId").append(artist); 
-        $("#tBodyId").append(album); 
-        $("#tBodyId").append(twitterUrl); 
+        var row = $("<tr>");
 
+        var id = $("<td>").text(index);
+        var song = $("<td>").text(element.songName);
+        var artist = $("<td>").text(element.artistName);
+        var album = $("<td>").text(element.albumName);
+        var twitterUrl = $("<td>").text(element.twitterUrl);
 
+        var ticketBtn = $("<i class='fas fa-ticket-alt'></i>").attr("id", index);
+        $(ticketBtn).attr("artist", element.artistName);
 
+        $(row).append(id);  
+        $(row).append(song); 
+        $(row).append(artist); 
+        $(row).append(album); 
+        $(row).append(twitterUrl); 
+        $(row).append(ticketBtn);
+        console.log(row)
+        $("#tableId").append(row)
+        console.log(index)
+        index++;
 
         // $(".tBodyClass").append("<tr class='r"+i+"'>" +
         //     "<td id='r"+i+"c"+0+"'>"+i+"</td>" +
@@ -259,7 +293,7 @@ function createTable(result) {
         //         "<input type='button' class='tblBtn' id='dBtn_r"+i+"c"+8+"' onclick='deleteRow("+i+")' value='Remove'>" +
         //     "</td>" +
         // "</tr>");
-    }
+    });
    
 };
 
