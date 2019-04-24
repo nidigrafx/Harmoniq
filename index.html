@@ -6,7 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="resources/css/style.css">
 </head>
 
 <body>
@@ -115,6 +116,48 @@
         </div>
     </div>
 
+        <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h2 class="modal-title" id="modalTital"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="container" id="event">
+                    <div class="container">
+                        <h4>Address: </h4>
+                        <p class="eventP" id="address"></p>
+                    </div>
+                    <div class="container">
+                        <h4>City: </h4>
+                        <p class="eventP" id="city"></p>
+                    </div>
+                    <div class="container">
+                        <h4>Country: </h4>
+                        <p class="eventP" id="country"></p>
+                    </div>
+                    <div class="container">
+                        <h4>Date: </h4>
+                        <p class="eventP" id="date"></p>
+                    </div>
+                    <div class="container">
+                        <h4>Genre: </h4>
+                        <p class="eventP" id="genre"></p>
+                    </div>
+                    <div class="container">
+                        <h4>Status: </h4>
+                        <p class="eventP" id="status"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
 
     <!-- ============================================================================================================================= -->
     <!-- Div: Displays the Ticketmaster Search Result -->
@@ -132,15 +175,15 @@
     </footer>  
 
 
+
     
     <!-- ============================================================================================================================= -->
     <!-- JavaScript and jQuery Scripts -->
     <!-- ============================================================================================================================= -->
-
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script type="text/javascript" src="resources/javascript/logic.js"></script>
     
 

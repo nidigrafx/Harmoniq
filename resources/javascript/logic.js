@@ -30,8 +30,8 @@ const ticketMasterApiKey = "5ELeAvJcyCqqiNidXz1z1MViy9Rc22cH";
 
 $(document).on("click",".fas", async function() {
   
-    const {value: text} = await Swal.fire({title: 'Sweet!',
-        text: 'Modal with a custom image.',
+    const {value: text} = await Swal.fire({title: 'Enter Zipcode!',
+        text: 'Enter your zip code to see events near you!.',
         imageUrl: 'https://unsplash.it/400/200',
         imageWidth: 400,
         imageHeight: 200,
@@ -148,7 +148,7 @@ function searchByArtist(artist) {
 // =========================================================================================================================
 
 function ticketSearch(searchTerm, zipCode) {
-    var result = [];
+   
     $.ajax({
         type:"GET",
         url:"https://app.ticketmaster.com/discovery/v2/events.json",
@@ -160,25 +160,39 @@ function ticketSearch(searchTerm, zipCode) {
         },
         dataType: "json",
         success: function(response) {
+            try {
+                var result = [];
+                let jsonArray = response._embedded.events;
 
-            let jsonArray = response._embedded.events;
+                jsonArray.forEach(element => {
+                    let event = {
+                        eventName: element.name,
+                        date: element.dates.start.localDate,
+                        status: element.dates.status.code,
+                        genre: element.classifications[0].subGenre.name,
+                        venueName: element._embedded.venues[0].name,
+                        address: element._embedded.venues[0].address.line1,
+                        city: element._embedded.venues[0].city.name,
+                        country: element._embedded.venues[0].country.name,
+                        countryCode: element._embedded.venues[0].country.countryCode
+                    }
+                    result.push(event);
+                    populateModal(result);
+                    $("#exampleModal").modal("show");
 
-            jsonArray.forEach(element => {
-                let event = {
-                    eventName: element.name,
-                    date: element.dates.start.localDate,
-                    status: element.dates.status.code,
-                    genre: element.classifications[0].subGenre.name,
-                    venueName: element._embedded.venues[0].name,
-                    address: element._embedded.venues[0].address.line1,
-                    city: element._embedded.venues[0].city.name,
-                    country: element._embedded.venues[0].country.name,
-                    countryCode: element._embedded.venues[0].country.countryCode
-                }
-                result.push(event);
-            });
+                });
+            }catch(exception) {
+                result = [{}];
+                console.log("no results");
+
+                Swal.fire({
+                    type: 'error',
+                    title: 'No events found'
+                  });
+            }
             console.log(result);
             }
+        
       });
 }
 
@@ -219,14 +233,27 @@ $("#artistBtn").on("click", function(event) {
   
   });
 
+//Ticket modal
+function populateModal(resultList) {
+    resultList.forEach(event => {
+        $("#modalTital").text(event.eventName);
+
+        $("#address").text(event.address);
+        $("#city").text(event.city);
+        $("#country").text(event.country);
+        $("#date").text(event.date);
+        $("#genre").text(event.genre);
+        $("#status").text(event.status);
+    });
+}
+
 
 // =========================================================================================================================
 // CREATE AND POPULATE HTML TABLE
 // =========================================================================================================================
 
 function createTable(result) {
-    console.log("----start of create table------");
-    console.log(result);
+
     var tableHeader = $("#tableId");
 
     $(tableHeader).html("<thead class='thead-light'>" +
@@ -242,7 +269,6 @@ function createTable(result) {
 
     result.forEach(function(element, index) {
         index++;
-        console.log(element);
 
         var row = $("<tr>");
 
@@ -261,9 +287,8 @@ function createTable(result) {
         $(row).append(album); 
         $(row).append(twitterUrl); 
         $(row).append(ticketBtn);
-        console.log(row)
-        $("#tableId").append(row)
-        console.log(index)
+
+        $("#tableId").append(row);
         index++;
     });
    
