@@ -164,6 +164,7 @@ function ticketSearch(searchTerm, zipCode) {
         data: {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
+            includeSpellcheck: "yes",
             size: 1
         },
         dataType: "json",
