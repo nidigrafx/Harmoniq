@@ -206,7 +206,6 @@ function ticketSearch(searchTerm, zipCode) {
                         eventName: element.name,
                         date: element.dates.start.localDate,
                         status: element.dates.status.code,
-                        genre: element.classifications[0].subGenre.name,
                         venueName: element._embedded.venues[0].name,
                         address: element._embedded.venues[0].address.line1,
                         city: element._embedded.venues[0].city.name,
@@ -220,6 +219,7 @@ function ticketSearch(searchTerm, zipCode) {
 
                 });
             }catch(exception) {
+                console.log(exception);
                 result = [{}];
                 console.log("no results");
 
@@ -249,11 +249,8 @@ function ticketSearch(searchTerm, zipCode) {
 $("#artistBtn").on("click", function(event) {
     event.preventDefault();
   
-    console.log("this:", this);
-  
     // Trim spaces from user input
     var artist = $("#searchTerm").val().trim();
-    console.log("artist:", artist);
 
     searchByArtist(artist);
   
@@ -283,15 +280,10 @@ function populateModal(resultList) {
 $("#songBtn").on("click", function(event) {
     event.preventDefault();
   
-  
     // Trim spaces from user input
     var song = $("#searchTerm").val().trim();
-    console.log(song);
-    searchBySong(song);
-
-    // Push user input to firebase database
-    
   
+    searchBySong(song);
     // Clear input field
     $("#searchTerm").val("");
   
@@ -311,7 +303,6 @@ $("#songBtn").on("click", function(event) {
         });
     })
   }
-
 
 
 // =========================================================================================================================
@@ -351,6 +342,8 @@ function createTableArtist(result, artist) {
         $("#tableId").append(row);
         index++;
     });
+    var ua= navigator.userAgent;
+    localStorage.setItem("user agent",ua);
 
         var databaseSave = {
             searchValue: artist,
@@ -364,9 +357,7 @@ function createTableArtist(result, artist) {
    
 };
 
-var ua= navigator.userAgent;
-localStorage.setItem("user agent",ua);
-console.log("ua", ua);
+
 
 // =========================================================================================================================
 // CREATE AND POPULATE HTML TABLE - FOR SONG SEARCH RESULTS
@@ -412,89 +403,17 @@ function createTableSong(result, song) {
 
     });
 
+    var ua= navigator.userAgent;
+    localStorage.setItem("user agent",ua);
+
     var databaseSave = {
         searchValue: song,
         ua: ua,
         record: result,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     }
-
         // push results to Firebase
         firebaseDB.ref().push(databaseSave);
    
 };
 
-
-  /* 
-// =========================================================================================================================
-// PUSH DATA TO FIREBASE REALTIME DATABASE
-// =========================================================================================================================
-
-firebaseDB.ref().on("child_added", function(childSnapshot) {
-
-     //Push search results to Firebase database
-
-    result.forEach(function(element, index) {
-
-        firebaseDB.ref().push({
-            id: index,
-            song: element.songName,
-            artist: element.artistName,
-            album: element.albumName,
-            twitterUrl: element.twitterUrl,
-            dateAdded: firebase.database.ServerValue.TIMESTAMP
-        });
-
-        index++;
-    });
-});
-
-
-
-
-
-
-
-
-// =========================================================================================================================
-// GET DATA FROM FIREBASE REALTIME DATABASE
-// =========================================================================================================================
-
-firebaseDB.ref().on("child_added", function(childSnapshot) {
-
-    //console.log("Number of records in Firebase: "+childSnapshot.numChildren());
-    //console.log("childSnapshot.val(): ", childSnapshot.val()); // gives field details
-  
-    // Data from Firebase
-    id = childSnapshot.val().id;
-    song = childSnapshot.val().song;
-    artist = childSnapshot.val().artist;
-    album = childSnapshot.val().album;
-    twitterUrl = childSnapshot.val().twitterUrl;
-
-    var keyId = childSnapshot.key;
-    //console.log("keyId: ", keyId);
-       
-    // Error Handler
-    }, function(errorObject) {
-      console.log("firebase return error: " + errorObject.code);
-  });
-  
-
-
-
-
-// =========================================================================================================================
-// UPDATE FIREBASE
-// =========================================================================================================================
-
-    // Update firebase database
-    firebaseDB.ref(keyId).update({
-        // enter ticket master results??
-        zipCode: zipCode,
-    });
-
-
-  
-  */
-  
