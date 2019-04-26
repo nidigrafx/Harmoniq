@@ -190,9 +190,10 @@ function ticketSearch(searchTerm, zipCode) {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
             countryCode: "US",
-            size: 1,
+            size: 5,
             includeSpellcheck: "yes",
-            postalcode: zipCode,
+            sort: "relevance,asc",
+            postalcode: "zipCode",
         },
         dataType: "json",
         success: function(response) {
