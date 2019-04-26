@@ -189,11 +189,14 @@ function ticketSearch(searchTerm, zipCode) {
         data: {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
-            countryCode: "US",
+            //countryCode: "US",
+            stateCode: "tx",
             size: 5,
             includeSpellcheck: "yes",
-            sort: "relevance,asc",
-            postalcode: "zipCode",
+            //sort: "distance,asc",
+            geoPoint: "32.7767,96.7970",
+            //postalCode: "75039",
+            //city: "irving"
         },
         dataType: "json",
         success: function(response) {
