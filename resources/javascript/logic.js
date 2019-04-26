@@ -164,8 +164,8 @@ function ticketSearch(searchTerm, zipCode) {
         data: {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
-            size: 1,
-            postalcode: zipCode
+            includeSpellcheck: "yes",
+            size: 1
         },
         dataType: "json",
         success: function(response) {
@@ -381,18 +381,7 @@ var myJSON;
 
         $("#tableId").append(row);
 
-
-        // results for Firebase
-            obj = { id: index, 
-                song: element.songName, 
-                artist: element.artistName, 
-                album: element.albumName, 
-                twitterUrl: element.twitterUrl }; 
-
-
     });
-
-    console.log("obj:", obj);
 
     var databaseSave = {
         searchValue: song,
