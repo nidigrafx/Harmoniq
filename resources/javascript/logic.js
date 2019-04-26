@@ -245,7 +245,7 @@ function ticketSearch(searchTerm, zipCode) {
 $("#artistBtn").on("click", function(event) {
     event.preventDefault();
   
-    console.log("this:", this);
+    $(".header").slideUp();
   
     // Trim spaces from user input
     var artist = $("#searchTerm").val().trim();
@@ -279,7 +279,8 @@ function populateModal(resultList) {
 $("#songBtn").on("click", function(event) {
     event.preventDefault();
   
-  
+    $(".header").slideUp();
+
     // Trim spaces from user input
     var song = $("#searchTerm").val().trim();
     console.log(song);
@@ -315,6 +316,8 @@ $("#songBtn").on("click", function(event) {
 // =========================================================================================================================
 
 function createTableArtist(result, artist) {
+    
+    $(".header").slideUp();
 
     var tableHeader = $("#tableId");
 
@@ -347,6 +350,8 @@ function createTableArtist(result, artist) {
         $("#tableId").append(row);
         index++;
     });
+
+
 
         var databaseSave = {
             searchValue: artist,
@@ -378,13 +383,9 @@ function createTableSong(result, song) {
             "<th scope='col'>Song Title</th>" +
             "<th scope='col'>Artist</th>" +
             "<th scope='col'>Album</th>" +
-            "<th scope='col'>Social</th>" +
             "<th scope='col' id = 'thAction' colspan='4'>Events</th>" +
         "</tr>" +
     "</thead>");
-
-var obj = {};
-var myJSON;
 
     result.forEach(function(element, index) {
         index++;
@@ -411,6 +412,11 @@ var myJSON;
 
     });
 
+    
+    
+    $("#backBtn").html("<button type='button' class='back' value='Back'</button>");
+
+
     var databaseSave = {
         searchValue: song,
         ua: ua,
@@ -422,6 +428,14 @@ var myJSON;
         firebaseDB.ref().push(databaseSave);
    
 };
+
+
+slideDownAction = function () {
+    $(".header").slideDown();
+}
+
+
+
 
 
   /* 
