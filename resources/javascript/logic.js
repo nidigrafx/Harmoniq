@@ -191,9 +191,8 @@ function ticketSearch(searchTerm, zipCode) {
             keyword: searchTerm,
             countryCode: "US",
             size: 1,
-            postalcode: zipCode,
             includeSpellcheck: "yes",
-            size: 1
+            postalcode: zipCode,
         },
         dataType: "json",
         success: function(response) {
@@ -229,10 +228,15 @@ function ticketSearch(searchTerm, zipCode) {
                     title: 'No events found'
                   });
             }
-            console.log(result);
-            }
-        
-      });
+        }
+    }).fail(function() {
+        Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            footer: '<a href>Why do I have this issue?</a>'
+          });
+    });
 }
 
 
@@ -382,9 +386,6 @@ function createTableSong(result, song) {
             "<th scope='col' id = 'thAction' colspan='4'>Events</th>" +
         "</tr>" +
     "</thead>");
-
-var obj = {};
-var myJSON;
 
     result.forEach(function(element, index) {
         index++;
