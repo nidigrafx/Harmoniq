@@ -254,7 +254,7 @@ $("#artistBtn").on("click", function(event) {
     event.preventDefault();
   
     // Slide Up to display results table
-    $(".header").slideUp();
+    //$(".header").slideUp();
   
     // Trim spaces from user input
     var artist = $("#searchTerm").val().trim();
@@ -288,7 +288,7 @@ $("#songBtn").on("click", function(event) {
     event.preventDefault();
   
     // Slide Up to display results table
-    $(".header").slideUp();
+    //$(".header").slideUp();
 
     // Trim spaces from user input
     var song = $("#searchTerm").val().trim();
@@ -356,7 +356,7 @@ function createTableArtist(result, artist) {
     localStorage.setItem("user agent",ua);
 
     // Slide Down Button
-    $(".backDiv").html("<button type='button' class='btn btn-secondary' onclick='slideDownAction()'>Back</button>");
+    //$(".backDiv").html("<button type='button' class='btn btn-secondary' onclick='slideDownAction()'>Back</button>");
 
 
         var databaseSave = {
@@ -417,7 +417,7 @@ function createTableSong(result, song) {
     });
   
     // Slide Down Button
-    $(".backDiv").html("<button type='button' class='btn btn-secondary' onclick='slideDownAction()'>Back</button>");
+    //$(".backDiv").html("<button type='button' class='btn btn-secondary' onclick='slideDownAction()'>Back</button>");
 
 
     var databaseSave = {
