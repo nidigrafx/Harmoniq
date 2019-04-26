@@ -23,10 +23,12 @@
         </video>
         <!-- //--place holder for logo// -->
         
-        <br>
         <iframe class="youtube-player" 
         type="text/html" width="640" height="385"
         src="http://www.youtube.com/embed/ID"></iframe>
+        <div class="about">
+            <a href="#" id = "aboutBtn"class="btn btn-artist">About HQ</a>
+        </div>
 
         <div class="welcome-msg">
             <h1>HARMONIQ</h1>
@@ -34,13 +36,8 @@
             <a href="#" id = "artistBtn"class="btn btn-artist">Artist</a>
             <a href="#" id = "songBtn" class="btn btn-song-search">Song Search</a>
         </div>
-    
         <br>
         <br>
-        <br>
-        <br>
-        <br>
-    
         <div class="table-responsive">
             <table class="table" id="tableId">
                 <tbody class="tBodyClass" id="tBodyId"></tbody>
@@ -96,7 +93,15 @@
         </div>
         </div>
     </div>
-
+    <script>
+        $('#aboutBtn').click(function(e){
+            swal({
+                title: 'Harmoniq',
+                url: 'resources/images/aboutHQ.pdf'
+            })
+        })
+    
+    </script>
 
     <!-- ============================================================================================================================= -->
     <!-- Div: Displays the Ticketmaster Search Result -->
