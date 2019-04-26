@@ -34,7 +34,7 @@ $(document).on("click",".fas", async function() {
   
     const {value: text} = await Swal.fire({title: 'Enter Zipcode!',
         text: 'Enter your zip code to see events near you!.',
-        imageUrl: 'https://unsplash.it/400/200',
+        imageUrl: "resources/images/5.jpg",
         imageWidth: 400,
         imageHeight: 200,
         imageAlt: 'Custom image',
@@ -148,6 +148,31 @@ function searchByArtist(artist) {
     });
 }
 
+$(this).parent('td').parent('tr').parent().children('tr.expanded').each(
+    function(i)
+    {
+       $(this).remove();
+    }
+ );
+
+
+// And here's the expand:
+
+// get a handle on where we want to insert some rows
+var recurDetails = $(this).parent('td').parent('tr');
+
+// grab the ID number from the first cell
+var eventID = $(this).parent('td').parent('tr').children('td.event-id').html();
+
+// use an ajax call to get the rows to show   
+ $.get(
+    '/manage/ajax/manage_event_recurring.php?event=' + eventID,
+    function(ajaxhtml){
+       recurDetails.after(ajaxhtml);
+      // end throbber
+      $this.parent('td').children('img.throbber').remove();
+    }
+ );
 
 
 // =========================================================================================================================
@@ -166,7 +191,9 @@ function ticketSearch(searchTerm, zipCode) {
             keyword: searchTerm,
             countryCode: "US",
             size: 1,
-            postalcode: zipCode
+            postalcode: zipCode,
+            includeSpellcheck: "yes",
+            size: 1
         },
         dataType: "json",
         success: function(response) {
