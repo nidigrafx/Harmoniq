@@ -164,7 +164,9 @@ function ticketSearch(searchTerm, zipCode) {
         data: {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
-            size: 1
+            countryCode: "US",
+            size: 1,
+            postalcode: zipCode
         },
         dataType: "json",
         success: function(response) {
