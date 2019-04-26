@@ -3,14 +3,14 @@
 // =========================================================================================================================
 
 var config = {
-    apiKey: "AIzaSyBm_ki9wJ9ffmrKSINeopKCXy4vIjYb0qw",
-    authDomain: "harmoniq-f9417.firebaseapp.com",
-    databaseURL: "https://harmoniq-f9417.firebaseio.com",
-    projectId: "harmoniq-f9417",
-    storageBucket: "harmoniq-f9417.appspot.com",
-    messagingSenderId: "437101250670"
-};
-firebase.initializeApp(config);
+    apiKey: "AIzaSyButBMTK9NxMSyqJPNVvIoxyBgYmMMu0qs",
+    authDomain: "harmoniq.firebaseapp.com",
+    databaseURL: "https://harmoniq.firebaseio.com",
+    projectId: "harmoniq",
+    storageBucket: "harmoniq.appspot.com",
+    messagingSenderId: "604012143278"
+  };
+  firebase.initializeApp(config);
 
 var firebaseDB = firebase.database();
 
@@ -23,16 +23,18 @@ var firebaseDB = firebase.database();
 const musicApiKey = "cd406979493ca39852ad6ce1bcb6dbd5";
 const ticketMasterApiKey = "5ELeAvJcyCqqiNidXz1z1MViy9Rc22cH";
 
+ 
+
 
 // =========================================================================================================================
-// ZipCode
+// GET ZIP CODE
 // =========================================================================================================================
 
 $(document).on("click",".fas", async function() {
   
     const {value: text} = await Swal.fire({title: 'Enter Zipcode!',
         text: 'Enter your zip code to see events near you!.',
-        imageUrl: 'https://unsplash.it/400/200',
+        imageUrl: "resources/images/5.jpg",
         imageWidth: 400,
         imageHeight: 200,
         imageAlt: 'Custom image',
@@ -66,7 +68,8 @@ $("#purchase").on("click", function() {
 
 
 // =========================================================================================================================
-// API: MUSIXMATCH - SEARCH BY SONG
+// API: MUSIXMATCH - FOR SEARCH BY SONG
+// CREATE TABLE OF RESULTS
 // requires a string of any song name
 // returns an array of 5 objects of the results
 // object contains: album name, artist name, and the song name
@@ -99,14 +102,15 @@ function searchBySong(song) {
             result.push(track);
         });
         console.log(result);
-        createTable(result);
+        createTableSong(result, song);
       //  songDatabaseUpdate(result);
     });
 }
 
 
 // =========================================================================================================================
-// API: MUSIXMATCH - SEARCH BY ARTIST NAME
+// API: MUSIXMATCH - FOR SEARCH BY ARTIST NAME
+// CREATE TABLE OF RESULTS
 // requires a string of an artist
 // returns an array of 5 objects of the results
 // object contains: album name, artist name, and the song name
@@ -140,14 +144,39 @@ function searchByArtist(artist) {
             result.push(track);
             
         });
-        createTable(result);
+        createTableArtist(result, artist);
     });
 }
 
+$(this).parent('td').parent('tr').parent().children('tr.expanded').each(
+    function(i)
+    {
+       $(this).remove();
+    }
+ );
+
+
+// And here's the expand:
+
+// get a handle on where we want to insert some rows
+var recurDetails = $(this).parent('td').parent('tr');
+
+// grab the ID number from the first cell
+var eventID = $(this).parent('td').parent('tr').children('td.event-id').html();
+
+// use an ajax call to get the rows to show   
+ $.get(
+    '/manage/ajax/manage_event_recurring.php?event=' + eventID,
+    function(ajaxhtml){
+       recurDetails.after(ajaxhtml);
+      // end throbber
+      $this.parent('td').children('img.throbber').remove();
+    }
+ );
 
 
 // =========================================================================================================================
-// API: TICKETMASTER - SEARCH BY SEARCH TERM AND ZIP CODE
+// API: TICKETMASTER - SEARCH FOR EVENTS
 // search for an event
 // returns an array of event objects
 // =========================================================================================================================
@@ -160,8 +189,10 @@ function ticketSearch(searchTerm, zipCode) {
         data: {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
+            countryCode: "US",
             size: 1,
-            postalcode: zipCode
+            includeSpellcheck: "yes",
+            postalcode: zipCode,
         },
         dataType: "json",
         success: function(response) {
@@ -175,7 +206,6 @@ function ticketSearch(searchTerm, zipCode) {
                         eventName: element.name,
                         date: element.dates.start.localDate,
                         status: element.dates.status.code,
-                        genre: element.classifications[0].subGenre.name,
                         venueName: element._embedded.venues[0].name,
                         address: element._embedded.venues[0].address.line1,
                         city: element._embedded.venues[0].city.name,
@@ -189,6 +219,7 @@ function ticketSearch(searchTerm, zipCode) {
 
                 });
             }catch(exception) {
+                console.log(exception);
                 result = [{}];
                 console.log("no results");
 
@@ -197,44 +228,29 @@ function ticketSearch(searchTerm, zipCode) {
                     title: 'No events found'
                   });
             }
-            console.log(result);
-            }
-        
-      });
+        }
+    }).fail(function() {
+        Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            footer: '<a href>Why do I have this issue?</a>'
+          });
+    });
 }
 
 
-// =========================================================================================================================
-// PUSH DATA TO FIREBASE REALTIME DATABASE
-// =========================================================================================================================
-
-    // Push search results to Firebase database
-    // for(var i = 0; i < result.length; i++) {
-    
-    //     firebaseDB.ref().push({
-    //         artistName: result[i].artistName,
-    //         twitterUrl: result[i].songName,
-    //         dateAdded: firebase.database.ServerValue.TIMESTAMP
-    //     });
-    // }
-
-
-
 
 // =========================================================================================================================
-// SEARCH BY ARTIST NAME BUTTON CLICKED
-// Musixmatch API Call 
-// Create and populate HTML table
+// SEARCH BY ARTIST NAME: API CALL TO MUSIXMATCH
+// CREATE TICKET MODAL
 // =========================================================================================================================
 
 $("#artistBtn").on("click", function(event) {
     event.preventDefault();
   
-    console.log("this:", this);
-  
     // Trim spaces from user input
     var artist = $("#searchTerm").val().trim();
-    console.log("artist:", artist);
 
     searchByArtist(artist);
   
@@ -256,11 +272,98 @@ function populateModal(resultList) {
 }
 
 
+
 // =========================================================================================================================
-// CREATE AND POPULATE HTML TABLE
+// SEARCH BY SONG NAME: API CALL TO MUSIXMATCH
 // =========================================================================================================================
 
-function createTable(result) {
+$("#songBtn").on("click", function(event) {
+    event.preventDefault();
+  
+    // Trim spaces from user input
+    var song = $("#searchTerm").val().trim();
+  
+    searchBySong(song);
+    // Clear input field
+    $("#searchTerm").val("");
+  
+  });
+
+
+  function songDatabaseUpdate(objects) {
+      
+    objects.forEach(object => {
+        firebaseDB.ref().push({
+            resultNum: object.resultNum,   
+            songName: object.songName,
+            artistName: object.artistName,
+            albumName: object.albumName,
+            social: object.social,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
+        });
+    })
+  }
+
+
+// =========================================================================================================================
+// CREATE AND POPULATE HTML TABLE - FOR ARTIST SEARCH RESULTS
+// =========================================================================================================================
+
+function createTableArtist(result, artist) {
+
+    var tableHeader = $("#tableId");
+
+    $(tableHeader).html("<thead class='thead-light'>" +
+        "<tr>" +
+            "<th scope='col'>Result</th>" +
+            "<th scope='col'>Artist</th>" +
+            "<th scope='col'>Social</th>" +
+            "<th scope='col' id = 'thAction' colspan='4'>Events</th>" +
+        "</tr>" +
+    "</thead>");
+
+    result.forEach(function(element, index) {
+        index++;
+
+        var row = $("<tr>");
+
+        var id = $("<td>").text(index);
+        var artist = $("<td>").text(element.artistName);
+        var twitterUrl = $("<td>").text(element.twitterUrl);
+
+        var ticketBtn = $("<i class='fas fa-ticket-alt'></i>").attr("id", index);
+        $(ticketBtn).attr("artist", element.artistName);
+
+        $(row).append(id);  
+        $(row).append(artist); 
+        $(row).append(twitterUrl); 
+        $(row).append(ticketBtn);
+
+        $("#tableId").append(row);
+        index++;
+    });
+    var ua= navigator.userAgent;
+    localStorage.setItem("user agent",ua);
+
+        var databaseSave = {
+            searchValue: artist,
+            ua: ua,
+            record: result,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
+        }
+
+        // push results to Firebase
+        firebaseDB.ref().push(databaseSave);
+   
+};
+
+
+
+// =========================================================================================================================
+// CREATE AND POPULATE HTML TABLE - FOR SONG SEARCH RESULTS
+// =========================================================================================================================
+
+function createTableSong(result, song) {
 
     var tableHeader = $("#tableId");
 
@@ -297,171 +400,20 @@ function createTable(result) {
         $(row).append(ticketBtn);
 
         $("#tableId").append(row);
-        index++;
+
     });
+
+    var ua= navigator.userAgent;
+    localStorage.setItem("user agent",ua);
+
+    var databaseSave = {
+        searchValue: song,
+        ua: ua,
+        record: result,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+    }
+        // push results to Firebase
+        firebaseDB.ref().push(databaseSave);
    
 };
 
-
-
-// =========================================================================================================================
-// SEARCH BY SONG NAME BUTTON CLICKED: (1) API CALL TO MUSIXMATCH; (2) PUSH DATA TO FIREBASE REALTIME DATABASE
-// =========================================================================================================================
-
-$("#songBtn").on("click", function(event) {
-    event.preventDefault();
-  
-  
-    // Trim spaces from user input
-    var song = $("#searchTerm").val().trim();
-    console.log(song);
-    searchBySong(song);
-
-    // Push user input to firebase database
-    
-  
-    // Clear input field
-    $("#searchTerm").val("");
-  
-  });
-
-
-  function songDatabaseUpdate(objects) {
-      
-    objects.forEach(object => {
-        firebaseDB.ref().push({
-            resultNum: object.resultNum,   
-            songName: object.songName,
-            artistName: object.artistName,
-            albumName: object.albumName,
-            social: object.social,
-            dateAdded: firebase.database.ServerValue.TIMESTAMP
-        });
-    })
-  }
-
-  /* 
-
-// =========================================================================================================================
-// GET DATA FROM FIREBASE REALTIME DATABASE
-// =========================================================================================================================
-
-firebaseDB.ref().on("child_added", function(childSnapshot) {
-
-    //console.log("Number of records in Firebase: "+childSnapshot.numChildren());
-    //console.log("childSnapshot.val(): ", childSnapshot.val()); // gives field details
-  
-    // Data from Firebase
-    resultNum = childSnapshot.val().resultNum;
-    songName = childSnapshot.val().songName;
-    artistName = childSnapshot.val().artistName;
-    albumName = childSnapshot.val().albumName;
-    social = childSnapshot.val().social;
-
-    var keyId = childSnapshot.key;
-    //console.log("keyId: ", keyId);
-       
-    // Error Handler
-    }, function(errorObject) {
-      console.log("firebase return error: " + errorObject.code);
-  });
-  
-*/
-
-// =========================================================================================================================
-// DELETE TABLE ROW
-// =========================================================================================================================
-
-deleteRow = function (num) {
-    var rowDeleted = num;
-    
-    console.log("rowDeleted:", rowDeleted);
-    document.getElementById("tableId").deleteRow(num);
-  
-  
-    for(var i = 0; i < dbRecordCount; i++) {
-  
-      if(music[i].record === rowDeleted) {
-        keyId = music[i].keyId;
-  
-        console.log("rowDeleted", rowDeleted);
-        console.log("music[i].record", music[i].record);
-        console.log("keyId", keyId);
-      }
-    }
-  
-    // Push user input to firebase database
-    firebaseDB.ref(keyId).remove();
-  
-  }
-
-
-// =========================================================================================================================
-// TICKETMASTER BUTTON CLICKED: GET USER ZIPCODE
-// =========================================================================================================================
-
-ticketMasterRow = function (num) {
-       
-    document.getElementById("tBtn_r"+num+"c5").style.display="none"; // hide ticketmaster button
-    document.getElementById("zip_r"+num+"c6").style.display="block"; // display zip code input field
-    document.getElementById("sBtn_r"+num+"c7").style.display="block"; // display submit button
-  
-  };
-
-
-
-// =========================================================================================================================
-// TICKETMASTER SUBMIT BUTTON CLICKED: (1) TICKET MASTER API CALL
-// =========================================================================================================================
-
-submitRow = function (num) {
-    var ticketRow = num;
-   
-    searchTerm = document.getElementById("r"+num+"c2").value; //this is the Artist Name
-    zipCode = document.getElementById("zip_r"+num+"c6").value; //this is the zip code input field
-    
-
-    ticketSearch(searchTerm, zipCode);
-  
-    // Ticketmaster information to UI
-    $("#ticketId").append("<p class='tktEvent'>"+event[0].eventName+"</p>" +
-                          "<p class='tktEvent'>"+event[0].date+"</p>" +
-                          "<p class='tktEvent'>"+event[0].status+"</p>" +
-                          "<p class='tktEvent'>"+event[0].genre+"</p>" +
-                          "<p class='tktEvent'>"+event[0].address+"</p>" +
-                          "<p class='tktEvent'>"+event[0].city+"</p>" +
-                          "<p class='tktEvent'>"+event[0].state+"</p>" +
-                          "<p class='tktEvent'>"+event[0].stateCode+"</p>" +
-                          "<p class='tktEvent'>"+event[0].country+"</p>" +
-                          "<p class='tktEvent'>"+event[0].countryCode+"</p>" );
-
-
-    document.getElementById("tBtn_r"+num+"c5").style.display="block"; // display ticketmaster button
-    document.getElementById("zip_r"+num+"c6").style.display="none"; // hide zip code input field
-    document.getElementById("sBtn_r"+num+"c7").style.display="none"; // hide submit button
-
-    // Get record key
-    for(var i = 0; i < dbCount; i++) {
-  
-        if(music[i].record === ticketRow) {
-          keyId = music[i].keyId;
-    
-        console.log("music[i].record", music[i].record);
-        console.log("keyId", keyId);
-        }
-    }
-
-
-    // Update firebase database
-    firebaseDB.ref(keyId).update({
-        // enter ticket master results??
-        zipCode: zipCode,
-    });
-
-
-    // Clear input field
-    document.getElementById("zipCode").reset();
-
-  
-  }
-  

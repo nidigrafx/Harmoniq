@@ -46,3 +46,130 @@ html, body {
         margin-left: 30px;
     }
   
+    html, body {
+        height:100%;
+        margin:0;
+        padding:0;
+        }
+        .carousel, .item, .active {
+        height:100%;
+        }
+        .carousel-inner {
+        height:100%;
+        }
+        .carousel {
+        margin-bottom: 60px;
+        }
+        .carousel-caption {
+        z-index: 10;
+        }
+        .carousel .item {
+        background-color: #777;
+        }
+        .carousel .carousel-inner .bg {
+        background-repeat:no-repeat;
+        background-size:cover;
+        }
+        .carousel .carousel-inner .bg4 {
+        background-image:url('../images/4.jpg');
+        background-position: center center;
+        }
+        .carousel .carousel-inner .bg4 {
+        background-image:url('../images/3.jpg');
+        background-position: center center;
+        }
+        .carousel .carousel-inner .bg1 {
+        background-image:url('../images/1.jpg');
+        background-position: center center;
+        }
+        
+        *
+        {
+            margin: 0;
+            padding: 0;
+        }
+        .header
+        {
+            
+            height: 100vh;
+        }
+        .video-background
+        {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100;
+            width: auto;
+            height: auto;
+            z-index: -1;
+        }
+        
+        @media (min-aspect-ratio:16/9)
+        {
+            .video-background{
+                width: 100%;
+                height: auto;
+            }
+        }
+        .logo
+        {
+            margin: 25px;
+            height: 40px;
+        }
+        .welcome-msg
+        {
+            position: relative;
+            text-align: center;
+            font-family: monospace;
+            color: #fff;
+            top: 150px;
+        }
+        .welcome-msg
+        {
+            font-size: 80px;
+            font-weight: 100;
+            letter-spacing: 5px;
+            margin-bottom: 30px;
+        
+        }
+        .btn
+        {
+            font-size: 18px;
+            color:#fff;
+            margin: 5px;
+            padding: 7px 22px;
+            text-decoration: none;
+            border: 1px solid coral;
+            border-radius: 25px;
+        }
+        .btn-artist:hover
+        {
+            background: coral;
+            transition: .5s;
+        }
+        .btn-song-search:hover
+        {
+            background: coral;
+            transition: .5s;
+        }
+        h1
+        {
+            font-size: 100px;
+            color: coral;
+            opacity: 0.7;
+        
+        }
+        .content 
+        {
+            height: 1800px;
+            padding-top: 200px;
+            background-color: #e0e0e0;
+            text-align: center;
+        }
+
+        #searchTerm {
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
