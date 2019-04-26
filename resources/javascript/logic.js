@@ -195,8 +195,7 @@ function ticketSearch(searchTerm, zipCode) {
             includeSpellcheck: "yes",
             //sort: "distance,asc",
             geoPoint: "32.7767,96.7970",
-            //postalCode: "75039",
-            //city: "irving"
+            //city: "irving, dallas, grand prairie, allen, plano, frisco, richardson, fort worth, denton, lewisville, arlington, "
         },
         dataType: "json",
         success: function(response) {
