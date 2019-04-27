@@ -32,8 +32,8 @@ const ticketMasterApiKey = "5ELeAvJcyCqqiNidXz1z1MViy9Rc22cH";
 
 $(document).on("click",".fas", async function() {
   
-    const {value: text} = await Swal.fire({title: 'Enter Zipcode!',
-        text: 'Enter your zip code to see events near you!.',
+    const {value: text} = await Swal.fire({title: 'Enter Your State!',
+        text: 'Enter your state code to see events near you!.\ne.g tx',
         imageUrl: "resources/images/5.jpg",
         imageWidth: 400,
         imageHeight: 200,
@@ -45,9 +45,9 @@ $(document).on("click",".fas", async function() {
       })
       
       if (text) {
-        if(!isNaN(text) && text< 100000) {
-            var zipCode = text;
-            ticketSearch($(this).attr("artist"), zipCode);
+        if(isNaN(text)) {
+            var state = text;
+            ticketSearch($(this).attr("artist"), state);
         }
         else {
             Swal.fire({
@@ -181,7 +181,7 @@ var eventID = $(this).parent('td').parent('tr').children('td.event-id').html();
 // returns an array of event objects
 // =========================================================================================================================
 
-function ticketSearch(searchTerm, zipCode) {
+function ticketSearch(searchTerm, state) {
    
     $.ajax({
         type:"GET",
@@ -190,7 +190,7 @@ function ticketSearch(searchTerm, zipCode) {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
             countryCode: "US",
-            postal_code: zipCode,
+            stateCode: state,
             size: 5,
             includeSpellcheck: "yes",
            
