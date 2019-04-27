@@ -189,13 +189,11 @@ function ticketSearch(searchTerm, zipCode) {
         data: {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
-            //countryCode: "US",
-            stateCode: "tx",
+            countryCode: "US",
+            postal_code: zipCode,
             size: 5,
             includeSpellcheck: "yes",
-            //sort: "distance,asc",
-            geoPoint: "32.7767,96.7970",
-            //city: "irving, dallas, grand prairie, allen, plano, frisco, richardson, fort worth, denton, lewisville, arlington, "
+           
         },
         dataType: "json",
         success: function(response) {
