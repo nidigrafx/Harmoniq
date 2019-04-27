@@ -190,9 +190,10 @@ function ticketSearch(searchTerm, zipCode) {
             apikey: ticketMasterApiKey,
             keyword: searchTerm,
             countryCode: "US",
-            size: 1,
+            postal_code: zipCode,
+            size: 5,
             includeSpellcheck: "yes",
-            postalcode: zipCode,
+           
         },
         dataType: "json",
         success: function(response) {
@@ -249,6 +250,9 @@ function ticketSearch(searchTerm, zipCode) {
 $("#artistBtn").on("click", function(event) {
     event.preventDefault();
   
+    // Slide Up to display results table
+    //$(".header").slideUp();
+  
     // Trim spaces from user input
     var artist = $("#searchTerm").val().trim();
 
@@ -280,6 +284,9 @@ function populateModal(resultList) {
 $("#songBtn").on("click", function(event) {
     event.preventDefault();
   
+    // Slide Up to display results table
+    //$(".header").slideUp();
+
     // Trim spaces from user input
     var song = $("#searchTerm").val().trim();
   
@@ -310,7 +317,7 @@ $("#songBtn").on("click", function(event) {
 // =========================================================================================================================
 
 function createTableArtist(result, artist) {
-
+    
     var tableHeader = $("#tableId");
 
     $(tableHeader).html("<thead class='thead-light'>" +
@@ -344,6 +351,10 @@ function createTableArtist(result, artist) {
     });
     var ua= navigator.userAgent;
     localStorage.setItem("user agent",ua);
+
+    // Slide Down Button
+    //$(".backDiv").html("<button type='button' class='btn btn-secondary' onclick='slideDownAction()'>Back</button>");
+
 
         var databaseSave = {
             searchValue: artist,
@@ -373,7 +384,6 @@ function createTableSong(result, song) {
             "<th scope='col'>Song Title</th>" +
             "<th scope='col'>Artist</th>" +
             "<th scope='col'>Album</th>" +
-            "<th scope='col'>Social</th>" +
             "<th scope='col' id = 'thAction' colspan='4'>Events</th>" +
         "</tr>" +
     "</thead>");
@@ -402,9 +412,10 @@ function createTableSong(result, song) {
         $("#tableId").append(row);
 
     });
+  
+    // Slide Down Button
+    //$(".backDiv").html("<button type='button' class='btn btn-secondary' onclick='slideDownAction()'>Back</button>");
 
-    var ua= navigator.userAgent;
-    localStorage.setItem("user agent",ua);
 
     var databaseSave = {
         searchValue: song,
@@ -416,4 +427,16 @@ function createTableSong(result, song) {
         firebaseDB.ref().push(databaseSave);
    
 };
+
+
+// =========================================================================================================================
+// SLIDE DOWN FUNCTION
+// =========================================================================================================================
+
+slideDownAction = function () {
+    $(".header").slideDown();
+}
+
+
+
 
